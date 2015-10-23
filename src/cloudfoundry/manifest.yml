@@ -1,0 +1,13 @@
+---
+applications:
+- name: platform-operations 
+  memory: 512M
+  instances: 1
+  host: platform-operations
+  path: target/platform-operations-${version}.jar
+  services: 
+  - sso
+  - operations-store
+  - nats-provider
+  env:
+    SPRING_PROFILES_ACTIVE: "cloud,mongodb-cloud,nats-cloud"

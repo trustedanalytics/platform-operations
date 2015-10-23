@@ -1,0 +1,38 @@
+server.port: 8080
+
+security:
+  ignored: /open,/*.js,/sdoc.jsp,/api-docs,/api-docs/default/*,/images/*,/lib/*,/css/*
+
+
+spring.oauth2:
+  client:
+    accessTokenUri: ${vcap.services.sso.credentials.tokenUri}
+    userAuthorizationUri: ${vcap.services.sso.credentials.authorizationUri}
+    clientId: ${vcap.services.sso.credentials.clientId}
+    clientSecret: ${vcap.services.sso.credentials.clientSecret}
+
+
+  resource:
+    id: cloud_controller
+    jwt:
+      keyUri: ${vcap.services.sso.credentials.tokenKey}
+    userInfoUri: ${vcap.services.sso.credentials.userInfoUri}
+  check_token: ${vcap.services.sso.credentials.checkTokenUri}
+
+spring.oauth2.resource:
+  id: cloud_controller
+  jwt:
+    keyUri: ${vcap.services.sso.credentials.tokenKey}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.trustedanalytics: DEBUG
+
+cf:
+  uaa: ${vcap.services.sso.credentials.uaaUri}
+  resource: ${vcap.services.sso.credentials.apiEndpoint}
+
+refresh_schedule_h: 2
+nats.connection: ${vcap.services.nats-provider.credentials.url:nats://nats:c1oudc0w@10.10.3.10:4222}
+
