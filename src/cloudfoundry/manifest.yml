@@ -11,3 +11,4 @@ applications:
   - nats-provider
   env:
     SPRING_PROFILES_ACTIVE: "cloud,mongodb-cloud,nats-cloud"
+    VERSION: ${version}
