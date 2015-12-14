@@ -33,6 +33,9 @@ cf:
   uaa: ${vcap.services.sso.credentials.uaaUri}
   resource: ${vcap.services.sso.credentials.apiEndpoint}
 
+services:
+  user-management.url: ${vcap.services.user-management.credentials.host:http://localhost:9998}
+
 refresh_schedule_h: 2
 nats.connection: ${vcap.services.nats-provider.credentials.url:nats://nats:c1oudc0w@10.10.3.10:4222}
 

@@ -21,6 +21,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.trustedanalytics.platformoperations.data.PlatformSummary;
 import org.trustedanalytics.platformoperations.repository.PlatformSummaryMongoRepository;
+import org.trustedanalytics.platformoperations.security.UserRoleVerifier;
 import org.trustedanalytics.platformoperations.service.PlatformOperationsScheduler;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,22 +36,28 @@ public class PlatformController {
 
     private final PlatformOperationsScheduler scheduler;
     private final PlatformSummaryMongoRepository repository;
+    private final UserRoleVerifier userRoleVerifier;
 
     @Autowired
     public PlatformController(PlatformOperationsScheduler scheduler,
-        PlatformSummaryMongoRepository repository) {
+                              PlatformSummaryMongoRepository repository,
+                              UserRoleVerifier userRoleVerifier) {
         this.scheduler = scheduler;
         this.repository = repository;
+        this.userRoleVerifier = userRoleVerifier;
     }
 
     @RequestMapping(value = PLATFORM_SUMMARY, method = GET, produces = APPLICATION_JSON_VALUE)
     public PlatformSummary getPlatformSummary() {
+
+        userRoleVerifier.verifyIsAdmin();
         return repository.findTopByOrderByTimestampDesc();
     }
 
     @RequestMapping(value = PLATFORM_SUMMARY_CACHE, method = POST)
     public void refreshPlatformSummary() {
+
+        userRoleVerifier.verifyIsAdmin();
         scheduler.triggerPlatformSummary();
     }
-
 }
