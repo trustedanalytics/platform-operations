@@ -20,13 +20,9 @@ import org.trustedanalytics.cloud.cc.api.CcBuildpack;
 import org.trustedanalytics.cloud.cc.api.CcOperations;
 import org.trustedanalytics.cloud.cc.api.CcOrg;
 import org.trustedanalytics.cloud.cc.api.CcOrgSummary;
-import org.trustedanalytics.cloud.cc.api.manageusers.Role;
 import org.trustedanalytics.platformoperations.data.ControllerSummary;
-import org.trustedanalytics.platformoperations.data.OrgUser;
 
 import com.google.common.base.Stopwatch;
-
-import feign.FeignException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,23 +57,13 @@ public class ControllerMetricsTask implements Supplier<ControllerSummary> {
             .onExceptionResumeNext(Observable.empty())
             .toList();
 
-        final Observable<List<OrgUser>> users = organizations
-            .flatMap(org -> {
-                try {
-                    return Observable.from(client.getOrgUsers(org.getGuid(), Role.USERS));
-                } catch (FeignException ex) {
-                    LOGGER.error("Failed to get organization users", ex);
-                    return Observable.empty();
-                }
-            })
-            .map(user -> new OrgUser(user.getUsername()))
-            .toList();
+        final Observable<Integer> usersCount = client.getUsersCount();
 
         LOGGER.info("{} completed in {}s", taskName, stopwatch.elapsed(TimeUnit.SECONDS));
 
         return new ControllerSummary(
             summaries.toBlocking().first(),
-            users.toBlocking().first(),
+            usersCount.toBlocking().first().longValue(),
             buildpacks.toBlocking().first()
         );
     }

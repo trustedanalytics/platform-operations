@@ -15,8 +15,9 @@
  */
 package org.trustedanalytics.platformoperations.unit;
 
-import org.trustedanalytics.cloud.cc.api.*;
-import org.trustedanalytics.platformoperations.data.OrgUser;
+import org.trustedanalytics.cloud.cc.api.CcOrgSummary;
+import org.trustedanalytics.cloud.cc.api.CcOrgSummarySpace;
+import org.trustedanalytics.cloud.cc.api.CcBuildpack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,18 +76,4 @@ public class ControllerSummaryTestResources {
         buildpacks.add(buildpack2);
         return buildpacks;
     }
-
-    public static List<OrgUser> getOrgUsers() {
-        List<OrgUser> orgUsers = new ArrayList<>();
-        OrgUser orgUser1 = new OrgUser("userName1");
-        OrgUser orgUser2 = new OrgUser("userName2");
-        OrgUser orgUser3 = new OrgUser("userName3");
-        OrgUser orgUser4 = new OrgUser("userName1");
-        orgUsers.add(orgUser1);
-        orgUsers.add(orgUser2);
-        orgUsers.add(orgUser3);
-        orgUsers.add(orgUser4);
-        return orgUsers;
-    }
-
 }

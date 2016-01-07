@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.trustedanalytics.platformoperations.data;
 
 import org.trustedanalytics.cloud.cc.api.CcBuildpack;
 import org.trustedanalytics.cloud.cc.api.CcOrgSummary;
+import org.trustedanalytics.cloud.cc.api.CcOrgSummarySpace;
 
-import java.util.HashSet;
 import java.util.List;
 
 import lombok.Data;
-import org.trustedanalytics.cloud.cc.api.CcOrgSummarySpace;
 
 @Data
 public class ControllerSummary {
 
     protected List<CcOrgSummary> orgs;
-    protected List<OrgUser> orgUsers;
     protected List<CcBuildpack> buildpacks;
     protected long memUsedInMb;
     protected long serviceCount;
@@ -39,9 +36,9 @@ public class ControllerSummary {
     protected long userCount;
     protected long buildpackCount;
 
-    public ControllerSummary(List<CcOrgSummary> orgs, List<OrgUser> orgUsers, List<CcBuildpack> buildpacks) {
+    public ControllerSummary(List<CcOrgSummary> orgs, long userCount, List<CcBuildpack> buildpacks) {
         this.orgs = orgs;
-        this.orgUsers = orgUsers;
+        this.userCount = userCount;
         this.buildpacks = buildpacks;
         aggregateData();
     }
@@ -64,10 +61,6 @@ public class ControllerSummary {
         this.spaceCount = this.orgs.stream()
             .flatMap(org -> org.getSpaces().stream())
             .count();
-
-        HashSet<String> uniqueUsers = new HashSet<>();
-        this.orgUsers.stream().forEach(user -> uniqueUsers.add(user.getUsername()));
-        this.userCount = uniqueUsers.size();
 
         this.buildpackCount = this.buildpacks.size();
     }

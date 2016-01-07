@@ -39,7 +39,7 @@ public class ControllerSummaryTest {
 
         ControllerSummary controllerSummary = new ControllerSummary(
             ControllerSummaryTestResources.getCcOrgSummaries(),
-            ControllerSummaryTestResources.getOrgUsers(),
+            3,
             ControllerSummaryTestResources.getCcBuildpacks());
 
         assertEquals(APP_COUNT, controllerSummary.getAppCount());
