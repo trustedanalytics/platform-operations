@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.trustedanalytics</groupId>
             <artifactId>cf-client</artifactId>
-            <version>0.4.16</version>
+            <version>0.4.24</version>
         </dependency>
         <dependency>
             <groupId>com.github.cloudfoundry-community</groupId>

@@ -20,7 +20,7 @@ import org.trustedanalytics.platformoperations.data.ComponentMetrics;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComponentSummaryTestResources {
+public class ComponentSummaryTestFixtures {
 
     public static final int RESERVABLE_STAGERS = 2;
     public static final int MEM_FREE_BYTES = 2;

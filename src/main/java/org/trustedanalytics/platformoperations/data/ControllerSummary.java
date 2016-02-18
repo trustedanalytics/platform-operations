@@ -15,14 +15,15 @@
  */
 package org.trustedanalytics.platformoperations.data;
 
+import lombok.Builder;
 import org.trustedanalytics.cloud.cc.api.CcBuildpack;
 import org.trustedanalytics.cloud.cc.api.CcOrgSummary;
-import org.trustedanalytics.cloud.cc.api.CcOrgSummarySpace;
 
 import java.util.List;
 
 import lombok.Data;
 
+@Builder
 @Data
 public class ControllerSummary {
 
@@ -30,38 +31,10 @@ public class ControllerSummary {
     protected List<CcBuildpack> buildpacks;
     protected long memUsedInMb;
     protected long serviceCount;
+    protected long serviceInstancesCount;
     protected long appCount;
     protected long spaceCount;
     protected long orgCount;
     protected long userCount;
     protected long buildpackCount;
-
-    public ControllerSummary(List<CcOrgSummary> orgs, long userCount, List<CcBuildpack> buildpacks) {
-        this.orgs = orgs;
-        this.userCount = userCount;
-        this.buildpacks = buildpacks;
-        aggregateData();
-    }
-
-    private void aggregateData() {
-        this.memUsedInMb = this.orgs.stream()
-            .flatMap(org -> org.getSpaces().stream())
-            .mapToInt(CcOrgSummarySpace::getMemDevTotal).sum();
-
-        this.serviceCount = this.orgs.stream()
-            .flatMap(org -> org.getSpaces().stream())
-            .mapToInt(CcOrgSummarySpace::getServiceCount).sum();
-
-        this.appCount = this.orgs.stream()
-            .flatMap(org -> org.getSpaces().stream())
-            .mapToInt(CcOrgSummarySpace::getAppCount).sum();
-
-        this.orgCount = this.orgs.size();
-
-        this.spaceCount = this.orgs.stream()
-            .flatMap(org -> org.getSpaces().stream())
-            .count();
-
-        this.buildpackCount = this.buildpacks.size();
-    }
 }

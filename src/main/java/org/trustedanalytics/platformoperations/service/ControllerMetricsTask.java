@@ -20,6 +20,7 @@ import org.trustedanalytics.cloud.cc.api.CcBuildpack;
 import org.trustedanalytics.cloud.cc.api.CcOperations;
 import org.trustedanalytics.cloud.cc.api.CcOrg;
 import org.trustedanalytics.cloud.cc.api.CcOrgSummary;
+import org.trustedanalytics.cloud.cc.api.CcOrgSummarySpace;
 import org.trustedanalytics.platformoperations.data.ControllerSummary;
 
 import com.google.common.base.Stopwatch;
@@ -52,19 +53,38 @@ public class ControllerMetricsTask implements Supplier<ControllerSummary> {
 
         final Observable<List<CcBuildpack>> buildpacks = client.getBuildpacks().toList();
 
-        final Observable<List<CcOrgSummary>> summaries = organizations
-            .flatMap(org -> client.getOrgSummary(org.getGuid()))
-            .onExceptionResumeNext(Observable.empty())
-            .toList();
+        final Observable<CcOrgSummary> summaries = organizations
+                .flatMap(org -> client.getOrgSummary(org.getGuid()))
+                .onExceptionResumeNext(Observable.empty())
+                .cache();
 
         final Observable<Integer> usersCount = client.getUsersCount();
+        final Observable<Integer> serviceCount = client.getServicesCount();
+        final Observable<Integer> serviceInstancesCount = client.getServiceInstancesCount();
+        final Observable<Integer> appCount = client.getApplicationsCount();
+        final Observable<Integer> orgCount = client.getOrgsCount();
+        final Observable<Integer> buildpackCount = client.getBuildpacksCount();
+        final Observable<Integer> spaceCount = client.getSpacesCount();
 
         LOGGER.info("{} completed in {}s", taskName, stopwatch.elapsed(TimeUnit.SECONDS));
 
-        return new ControllerSummary(
-            summaries.toBlocking().first(),
-            usersCount.toBlocking().first().longValue(),
-            buildpacks.toBlocking().first()
-        );
+        return ControllerSummary.builder()
+                .buildpacks(buildpacks.toBlocking().first())
+                .userCount(usersCount.toBlocking().first().longValue())
+                .orgs(summaries.toList().toBlocking().first())
+                .appCount(appCount.toBlocking().first().longValue())
+                .buildpackCount(buildpackCount.toBlocking().first().longValue())
+                .orgCount(orgCount.toBlocking().first().longValue())
+                .serviceCount(serviceCount.toBlocking().first().longValue())
+                .serviceInstancesCount(serviceInstancesCount.toBlocking().first().longValue())
+                .spaceCount(spaceCount.toBlocking().first().longValue())
+                .memUsedInMb(summaries
+                                .flatMapIterable(CcOrgSummary::getSpaces)
+                                .map(CcOrgSummarySpace::getMemDevTotal)
+                                .reduce((acc, memDevTotal) -> acc + memDevTotal)
+                                .toBlocking()
+                                .singleOrDefault(0)
+                ).build();
+
     }
 }

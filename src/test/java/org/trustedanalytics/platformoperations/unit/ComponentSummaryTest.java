@@ -16,9 +16,9 @@
 package org.trustedanalytics.platformoperations.unit;
 
 import static org.junit.Assert.assertEquals;
-import static org.trustedanalytics.platformoperations.unit.ComponentSummaryTestResources.MEM_FREE_BYTES;
-import static org.trustedanalytics.platformoperations.unit.ComponentSummaryTestResources.MEM_USED_BYTES;
-import static org.trustedanalytics.platformoperations.unit.ComponentSummaryTestResources.RESERVABLE_STAGERS;
+import static org.trustedanalytics.platformoperations.unit.ComponentSummaryTestFixtures.MEM_FREE_BYTES;
+import static org.trustedanalytics.platformoperations.unit.ComponentSummaryTestFixtures.MEM_USED_BYTES;
+import static org.trustedanalytics.platformoperations.unit.ComponentSummaryTestFixtures.RESERVABLE_STAGERS;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ public class ComponentSummaryTest {
     public void aggregationCorrectness() {
 
         ComponentSummary componentSummary = new ComponentSummary(
-            ComponentSummaryTestResources.getComponentMetrics());
+            ComponentSummaryTestFixtures.getComponentMetrics());
 
         assertEquals(RESERVABLE_STAGERS, componentSummary.getReservableStagers());
         assertEquals(MEM_FREE_BYTES, componentSummary.getMemFreeInMb());

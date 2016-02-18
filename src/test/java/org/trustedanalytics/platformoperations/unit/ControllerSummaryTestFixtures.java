@@ -22,15 +22,9 @@ import org.trustedanalytics.cloud.cc.api.CcBuildpack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ControllerSummaryTestResources {
+public class ControllerSummaryTestFixtures {
 
     public static final int MEM_USED_IN_MB = 3;
-    public static final int SERVICE_COUNT = 3;
-    public static final int APP_COUNT = 3;
-    public static final int SPACE_COUNT = 3;
-    public static final int ORG_COUNT = 2;
-    public static final int USER_COUNT = 3;
-    public static final int BUILDPACK_COUNT = 2;
 
     public static List<CcOrgSummary> getCcOrgSummaries() {
         List<CcOrgSummary> orgSummaries = new ArrayList<>();

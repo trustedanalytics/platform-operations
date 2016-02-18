@@ -16,13 +16,8 @@
 package org.trustedanalytics.platformoperations.unit;
 
 import static org.junit.Assert.assertEquals;
-import static org.trustedanalytics.platformoperations.unit.ControllerSummaryTestResources.APP_COUNT;
-import static org.trustedanalytics.platformoperations.unit.ControllerSummaryTestResources.BUILDPACK_COUNT;
-import static org.trustedanalytics.platformoperations.unit.ControllerSummaryTestResources.MEM_USED_IN_MB;
-import static org.trustedanalytics.platformoperations.unit.ControllerSummaryTestResources.ORG_COUNT;
-import static org.trustedanalytics.platformoperations.unit.ControllerSummaryTestResources.SPACE_COUNT;
-import static org.trustedanalytics.platformoperations.unit.ControllerSummaryTestResources.SERVICE_COUNT;
-import static org.trustedanalytics.platformoperations.unit.ControllerSummaryTestResources.USER_COUNT;
+
+import static org.trustedanalytics.platformoperations.unit.ControllerSummaryTestFixtures.MEM_USED_IN_MB;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,17 +32,19 @@ public class ControllerSummaryTest {
     @Test
     public void aggregationCorrectness() {
 
-        ControllerSummary controllerSummary = new ControllerSummary(
-            ControllerSummaryTestResources.getCcOrgSummaries(),
-            3,
-            ControllerSummaryTestResources.getCcBuildpacks());
+        ControllerSummary controllerSummary = ControllerSummary.builder()
+                .buildpacks(ControllerSummaryTestFixtures.getCcBuildpacks())
+                .orgs(ControllerSummaryTestFixtures.getCcOrgSummaries())
+                .userCount(0)
+                .appCount(0)
+                .buildpackCount(0)
+                .orgCount(0)
+                .serviceCount(0)
+                .serviceInstancesCount(0)
+                .spaceCount(0)
+                .memUsedInMb(3)
+                .build();
 
-        assertEquals(APP_COUNT, controllerSummary.getAppCount());
-        assertEquals(SPACE_COUNT, controllerSummary.getSpaceCount());
         assertEquals(MEM_USED_IN_MB, controllerSummary.getMemUsedInMb());
-        assertEquals(SERVICE_COUNT, controllerSummary.getServiceCount());
-        assertEquals(BUILDPACK_COUNT, controllerSummary.getBuildpackCount());
-        assertEquals(ORG_COUNT, controllerSummary.getOrgCount());
-        assertEquals(USER_COUNT, controllerSummary.getUserCount());
     }
 }
