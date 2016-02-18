@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 public class PlatformController {
 
@@ -47,6 +49,7 @@ public class PlatformController {
         this.userRoleVerifier = userRoleVerifier;
     }
 
+    @ApiOperation("Get Platform statistics")
     @RequestMapping(value = PLATFORM_SUMMARY, method = GET, produces = APPLICATION_JSON_VALUE)
     public PlatformSummary getPlatformSummary() {
 
@@ -54,6 +57,7 @@ public class PlatformController {
         return repository.findTopByOrderByTimestampDesc();
     }
 
+    @ApiOperation("Trigger refresh of Platform statistics")
     @RequestMapping(value = PLATFORM_SUMMARY_CACHE, method = POST)
     public void refreshPlatformSummary() {
 
