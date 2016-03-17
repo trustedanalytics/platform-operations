@@ -49,7 +49,10 @@ public class PlatformController {
         this.userRoleVerifier = userRoleVerifier;
     }
 
-    @ApiOperation("Get Platform statistics")
+    @ApiOperation(
+            value = "Get Platform statistics",
+            notes = "Privilege level: Consumer of this endpoint must be an admin."
+    )
     @RequestMapping(value = PLATFORM_SUMMARY, method = GET, produces = APPLICATION_JSON_VALUE)
     public PlatformSummary getPlatformSummary() {
 
@@ -57,7 +60,10 @@ public class PlatformController {
         return repository.findTopByOrderByTimestampDesc();
     }
 
-    @ApiOperation("Trigger refresh of Platform statistics")
+    @ApiOperation(
+            value = "Trigger refresh of Platform statistics",
+            notes = "Privilege level: Consumer of this endpoint must be an admin."
+    )
     @RequestMapping(value = PLATFORM_SUMMARY_CACHE, method = POST)
     public void refreshPlatformSummary() {
 
