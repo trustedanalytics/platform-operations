@@ -37,8 +37,8 @@ import nats.client.Request;
 public class ComponentDiscoverTask implements Supplier<Collection<ComponentDiscoverMessage>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ComponentDiscoverTask.class);
     private static final String SUBJECT = "vcap.component.discover";
-    private final TimeUnit unit = TimeUnit.SECONDS;
-    private final long timeout = 10;
+    private static final TimeUnit unit = TimeUnit.SECONDS;
+    private static final long timeout = 10;
     private final ObjectMapper mapper;
     private final Nats nats;
 
