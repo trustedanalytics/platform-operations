@@ -19,6 +19,8 @@ spring.oauth2:
     userInfoUri: ${vcap.services.sso.credentials.userInfoUri}
   check_token: ${vcap.services.sso.credentials.checkTokenUri}
 
+uaaUri: ${vcap.services.sso.credentials.uaaUri}
+
 spring.oauth2.resource:
   id: cloud_controller
   jwt:

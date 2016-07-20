@@ -27,6 +27,9 @@ import org.trustedanalytics.cloud.cc.FeignClient;
 import org.trustedanalytics.cloud.cc.api.CcOperations;
 import org.trustedanalytics.cloud.cc.api.loggers.ScramblingSlf4jLogger;
 import org.trustedanalytics.platformoperations.client.UserManagementOperations;
+import org.trustedanalytics.platformoperations.client.uaa.CachedUaaOperations;
+import org.trustedanalytics.platformoperations.client.uaa.OAuth2PrivilegedInterceptor;
+import org.trustedanalytics.platformoperations.client.uaa.UaaOperations;
 import org.trustedanalytics.platformoperations.security.OAuth2TokenExtractor;
 import org.trustedanalytics.platformoperations.security.UserRoleVerifier;
 
@@ -83,10 +86,9 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    protected CcOperations ccPrivilegedClient() {
-        final String token = clientRestTemplate().getAccessToken().toString();
+    protected CcOperations ccPrivilegedClient(OAuth2PrivilegedInterceptor oauth2PrivilegedInterceptor) {
         return new FeignClient(apiBaseUrl, builder -> builder
-            .requestInterceptor(template -> template.header("Authorization", "bearer " + token))
+            .requestInterceptor(oauth2PrivilegedInterceptor)
             .logLevel(Logger.Level.BASIC));
     }
 
@@ -117,5 +119,15 @@ public class ApplicationConfiguration {
             .logger(new ScramblingSlf4jLogger(clientType.getClass()))
             .logLevel(Logger.Level.FULL)
             .target(clientType, url);
+    }
+
+    @Bean
+    protected OAuth2PrivilegedInterceptor oauth2PrivilegedInterceptor(UaaOperations uaaOperations) {
+        return new OAuth2PrivilegedInterceptor(uaaOperations);
+    }
+
+    @Bean
+    public UaaOperations uaaOperations(@Value("${uaaUri}") String uaaUri, OAuth2ProtectedResourceDetails clientCredentials) {
+        return new CachedUaaOperations(uaaUri, clientCredentials.getClientId(), clientCredentials.getClientSecret());
     }
 }
